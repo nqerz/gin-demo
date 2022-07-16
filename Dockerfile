@@ -22,8 +22,7 @@ COPY ./ .
 
 RUN go build -v -i -o ${PROJECT_NAME} ./
 
-# scratch
-FROM	golang:1.18-stretch
+FROM	scratch
 LABEL	maintainer="eric"
 
 ENV BIN_PATH "/usr/local/bin"
