@@ -41,7 +41,7 @@ jobs:
       - name: build image
         run: |
           make pre-build
-          GITHUB_BRANCH=$(echo $GITHUB_REF | sed -e "s#refs/heads/feature/##g")
+          GITHUB_BRANCH=$(echo $GITHUB_REF | sed -e "s#refs/heads/##g")
           GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)
           docker build -t gin-demo:$GITHUB_BRANCH .
           docker tag gin-demo:$GITHUB_BRANCH ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-$GITHUB_SHA_SHORT
@@ -54,7 +54,7 @@ jobs:
         with:
           ci-owner: znqerz
           ci-repository: gin-demo-manifests
-          ci-ref: refs/heads/main
+          ci-ref: $GITHUB_REF
           ci-user: znqerz
           ci-user-token: ${{ secrets.CI_TOKEN }}
           ci-name: BOT-CI
