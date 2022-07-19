@@ -44,11 +44,11 @@ jobs:
         uses: InformaticsMatters/trigger-ci-action@1.0.1
         with:
           ci-owner: znqerz
-          ci-repository: gin-demo-kustomize
-          ci-ref: refs/heads/master
+          ci-repository: gin-demo-manifests
+          ci-ref: refs/heads/main
           ci-user: znqerz
           ci-user-token: ${{ secrets.CI_TOKEN }}
-          ci-name: CI
+          ci-name: BOT-CI
           ci-inputs: >-
             image=${{ secrets.DOCKER_UERNAME }}/gin-demo
             sha-tag=sha-${{ github.sha }}
