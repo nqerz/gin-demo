@@ -54,7 +54,8 @@ jobs:
         with:
           ci-owner: znqerz
           ci-repository: gin-demo-manifests
-          ci-ref: ${{GITHUB_REF}}
+          ci-ref: >-
+            ${{ github.ref }}
           ci-user: znqerz
           ci-user-token: ${{ secrets.CI_TOKEN }}
           ci-name: BOT-CI
