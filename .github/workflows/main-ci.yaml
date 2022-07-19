@@ -41,7 +41,7 @@ jobs:
       - name: build image
         run: |
           make pre-build
-          GITHUB_BRANCH=$(echo $GITHUB_REF | sed -e "s#refs/heads/##g")
+          GITHUB_BRANCH=$(echo $GITHUB_REF | sed -e "s#refs/tags/##g")
           GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)
           docker build -t gin-demo:$GITHUB_BRANCH .
           docker tag gin-demo:$GITHUB_BRANCH ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-$GITHUB_SHA_SHORT
