@@ -37,8 +37,14 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: build image
         run: |
-          docker tag gin-demo:latest ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-${{ github.sha }}
-          docker push ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-${{ github.sha }}
+          make pre-build
+          GITHUB_BRANCH=$(echo $GITHUB_REF | sed -e "s#refs/heads/feature/##g")
+          GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)
+          docker build -t gin-demo:$GITHUB_BRANCH .
+          docker tag gin-demo:$GITHUB_BRANCH ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-$GITHUB_SHA_SHORT
+          docker tag gin-demo:$GITHUB_BRANCH ${{ secrets.DOCKER_UERNAME }}/gin-demo:$GITHUB_BRANCH
+          docker push ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-$GITHUB_SHA_SHORT
+          docker push ${{ secrets.DOCKER_UERNAME }}/gin-demo:$GITHUB_BRANCH
 
       - name: Trigger CI
         uses: InformaticsMatters/trigger-ci-action@1.0.1
