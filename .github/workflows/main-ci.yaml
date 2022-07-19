@@ -6,8 +6,8 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches:
-      - main
+    # branches:
+    #   - main
     tags:
       - "v.*"
   # pull_request:
@@ -54,7 +54,7 @@ jobs:
         with:
           ci-owner: znqerz
           ci-repository: gin-demo-manifests
-          ci-ref: $GITHUB_REF
+          ci-ref: ${{GITHUB_REF}}
           ci-user: znqerz
           ci-user-token: ${{ secrets.CI_TOKEN }}
           ci-name: BOT-CI
