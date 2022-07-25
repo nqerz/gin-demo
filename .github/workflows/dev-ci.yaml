@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKER_REGISTRY: ${{ secrets.DOCKER_UERNAME }}/gin-demo
+  DOCKER_REGISTRY: docker.io/${{ secrets.DOCKER_UERNAME }}
 
 jobs:
   build_image:
@@ -22,7 +22,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ env.DOCKER_REGISTRY }}
+            ${{ env.DOCKER_REGISTRY }}/gin-demo
           tags: |
             type=ref,event=branch
             type=ref,event=pr
