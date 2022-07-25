@@ -67,4 +67,4 @@ jobs:
           ci-name: BOT-CI
           ci-inputs: >-
             image=${{ env.DOCKER_REGISTRY }}/gin-demo
-            sha-tag=sha-${{ github.sha }}
+            sha-tag=${{ steps.meta.outputs.tags }}
