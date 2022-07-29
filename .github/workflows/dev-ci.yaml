@@ -1,9 +1,12 @@
-name: Dev CI
+name: Release CI
 
 on:
   push:
-    branches:
-      - "!main"
+    tags:
+      - "v*.*.*"
+  # pull_request:
+  #   branches: [main]
+  #   types: [closed]
 
   workflow_dispatch:
 
@@ -12,8 +15,8 @@ env:
 
 jobs:
   build_image:
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
@@ -24,7 +27,7 @@ jobs:
           images: |
             ${{ env.DOCKER_REGISTRY }}/gin-demo
           tags: |
-            type=sha
+            type=semver,pattern={{version}}
 
       - name: Docker Login
         uses: docker/login-action@v1.10.0
@@ -39,9 +42,20 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      # - name: build image
+      #   run: |
+      #     make pre-build
+      #     GITHUB_BRANCH=$(echo $GITHUB_REF | sed -e "s#refs/tags/##g")
+      #     GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)
+      #     docker build -t gin-demo:$GITHUB_BRANCH .
+      #     docker tag gin-demo:$GITHUB_BRANCH ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-$GITHUB_SHA_SHORT
+      #     docker tag gin-demo:$GITHUB_BRANCH ${{ secrets.DOCKER_UERNAME }}/gin-demo:$GITHUB_BRANCH
+      #     docker push ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-$GITHUB_SHA_SHORT
+      #     docker push ${{ secrets.DOCKER_UERNAME }}/gin-demo:$GITHUB_BRANCH
 
       - name: Trigger CI
         if: success()
@@ -56,5 +70,5 @@ jobs:
           ci-inputs: >-
             image=${{ env.DOCKER_REGISTRY }}/gin-demo
             tag=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-            env=local
-            src=local
+            env=dev
+            src=dev
