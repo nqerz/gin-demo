@@ -62,18 +62,18 @@ jobs:
       #     docker push ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-$GITHUB_SHA_SHORT
       #     docker push ${{ secrets.DOCKER_UERNAME }}/gin-demo:$GITHUB_BRANCH
 
-      - name: Trigger CI
-        if: success()
-        uses: InformaticsMatters/trigger-ci-action@86a187932ffa16df10523eeb341cd216e349bc61
-        with:
-          ci-owner: znqerz
-          ci-repository: gin-demo-manifests
-          ci-ref: refs/heads/main
-          ci-user: znqerz
-          ci-user-token: ${{ secrets.CI_TOKEN }}
-          ci-name: BOT-CI
-          ci-inputs: >-
-            image=${{ env.DOCKER_REGISTRY }}/gin-demo
-            tag=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-            env=dev
-            src=dev
+      # - name: Trigger CI
+      #   if: success()
+      #   uses: InformaticsMatters/trigger-ci-action@86a187932ffa16df10523eeb341cd216e349bc61
+      #   with:
+      #     ci-owner: ${{ secrets.GITHBU_USER }}
+      #     ci-repository: gin-demo-manifests
+      #     ci-ref: refs/heads/main
+      #     ci-user: ${{ secrets.GITHBU_USER }}
+      #     ci-user-token: ${{ secrets.CI_TOKEN }}
+      #     ci-name: BOT-CI
+      #     ci-inputs: >-
+      #       image=${{ env.DOCKER_REGISTRY }}/gin-demo
+      #       tag=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      #       env=dev
+      #       src=dev
