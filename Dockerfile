@@ -1,4 +1,4 @@
-FROM golang:1.18-stretch As builder
+FROM golang:1.20-bookworm As build-stage
 
 # ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE=on
@@ -6,12 +6,23 @@ ENV CGO_ENABLED=0
 ENV GOOS=linux
 ENV GOARCH=amd64
 
-ARG PROJECT_NAME="gin-demo"
-ARG PROJECT_PATH="/go/src"
+# Create appuser.
+ENV USER=appuser
+ENV UID=10001 
 
-WORKDIR $PROJECT_PATH
+# See https://stackoverflow.com/a/55757473/12429735RUN 
+RUN adduser \    
+    --disabled-password \    
+    --gecos "" \    
+    --home "/nonexistent" \    
+    --shell "/sbin/nologin" \    
+    --no-create-home \    
+    --uid "${UID}" \    
+    "${USER}"
 
-RUN sed -i 's/http/https/g' /etc/apt/sources.list && \
+WORKDIR /app
+
+RUN sed -i 's/http/https/g' /etc/apt/sources.list.d/debian.sources && \
     apt update && \
     apt install --no-install-recommends -y git tzdata ca-certificates && \
     rm /etc/localtime && \
@@ -20,25 +31,22 @@ RUN sed -i 's/http/https/g' /etc/apt/sources.list && \
 
 COPY ./ .
 
-RUN go build -v -i -o ${PROJECT_NAME} ./
+RUN go build -v -o /gin-demo
 
-FROM	scratch
-LABEL	maintainer="eric"
+FROM	scratch AS build-release-stage
 
-ENV BIN_PATH "/usr/local/bin"
-ENV TZ Asia/Shanghai
+WORKDIR /
 
-ARG PROJECT_NAME="gin-demo"
-ARG PROJECT_PATH="/go/src"
-
-COPY --from=builder $PROJECT_PATH/$PROJECT_NAME $BIN_PATH/$PROJECT_NAME
-COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
-COPY --from=builder /etc/localtime /etc/localtime
-COPY --from=builder /etc/timezone /etc/timezone
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /etc/passwd /etc/passwd
-COPY --from=builder /etc/group /etc/group
+COPY --from=build-stage /gin-demo /gin-demo
+COPY --from=build-stage /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=build-stage /etc/localtime /etc/localtime
+COPY --from=build-stage /etc/timezone /etc/timezone
+COPY --from=build-stage /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build-stage /etc/passwd /etc/passwd
+COPY --from=build-stage /etc/group /etc/group
 
 EXPOSE      8080
-# USER        nobody
-ENTRYPOINT  [ "/usr/local/bin/gin-demo" ]
+
+USER appuser:appuser
+
+ENTRYPOINT  [ "/gin-demo" ]
