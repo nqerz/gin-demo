@@ -10,10 +10,11 @@ import (
 func main() {
 	r := gin.Default()
 	secret := os.Getenv("SECRET_KEY_VALUE")
+	version := os.Getenv("TARGET_VERSION")
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "pong " + secret,
+			"message": "pong; " + secret + ";" + version,
 			"time": time.Now().Format(time.RFC3339),
 		})
 	})
