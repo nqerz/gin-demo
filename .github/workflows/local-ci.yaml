@@ -48,18 +48,18 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Trigger CI
-        if: success()
-        uses: InformaticsMatters/trigger-ci-action@1.0.1
-        with:
-          ci-owner: znqerz
-          ci-repository: gin-demo-manifests
-          ci-ref: refs/heads/main
-          ci-user: znqerz
-          ci-user-token: ${{ secrets.CI_TOKEN }}
-          ci-name: BOT-CI
-          ci-inputs: >-
-            image=${{ env.DOCKER_REGISTRY }}/gin-demo
-            tag=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-            env=local
-            src=local
+      # - name: Trigger CI
+      #   if: success()
+      #   uses: InformaticsMatters/trigger-ci-action@1.0.1
+      #   with:
+      #     ci-owner: znqerz
+      #     ci-repository: gin-demo-manifests
+      #     ci-ref: refs/heads/main
+      #     ci-user: znqerz
+      #     ci-user-token: ${{ secrets.CI_TOKEN }}
+      #     ci-name: BOT-CI
+      #     ci-inputs: >-
+      #       image=${{ env.DOCKER_REGISTRY }}/gin-demo
+      #       tag=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+      #       env=local
+      #       src=local
