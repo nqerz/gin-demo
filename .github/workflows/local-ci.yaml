@@ -52,10 +52,10 @@ jobs:
       #   if: success()
       #   uses: InformaticsMatters/trigger-ci-action@1.0.1
       #   with:
-      #     ci-owner: znqerz
+      #     ci-owner: ${{ secrets.GITHBU_USER }}
       #     ci-repository: gin-demo-manifests
       #     ci-ref: refs/heads/main
-      #     ci-user: znqerz
+      #     ci-user: ${{ secrets.GITHBU_USER }}
       #     ci-user-token: ${{ secrets.CI_TOKEN }}
       #     ci-name: BOT-CI
       #     ci-inputs: >-
