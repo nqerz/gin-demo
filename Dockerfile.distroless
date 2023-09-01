@@ -1,4 +1,4 @@
-FROM golang:1.20-bookworm As build-stage
+FROM golang:1.21-bookworm As build-stage
 
 # ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE=on

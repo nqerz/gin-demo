@@ -1,4 +1,4 @@
-FROM golang:1.20-bookworm As build-stage
+FROM golang:1.21-bookworm As build-stage
 
 # ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE=on
@@ -9,16 +9,23 @@ ENV GOARCH=amd64
 # Create appuser.
 ENV USER=appuser
 ENV UID=10001 
+ENV USERGROUP=appgroup
+ENV GID=10001
 
 # See https://stackoverflow.com/a/55757473/12429735RUN 
-RUN adduser \    
+RUN addgroup \
+    --gid "${GID}" \
+    "${USERGROUP}" && \
+    adduser \    
     --disabled-password \    
     --gecos "" \    
     --home "/nonexistent" \    
     --shell "/sbin/nologin" \    
     --no-create-home \    
-    --uid "${UID}" \    
+    --uid "${UID}" \  
+    --gid "${GID}" \
     "${USER}"
+
 
 WORKDIR /app
 
@@ -33,7 +40,7 @@ COPY ./ .
 
 RUN go build -v -o /gin-demo
 
-FROM	scratch AS build-release-stage
+FROM scratch AS build-release-stage
 
 WORKDIR /
 
@@ -45,8 +52,8 @@ COPY --from=build-stage /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build-stage /etc/passwd /etc/passwd
 COPY --from=build-stage /etc/group /etc/group
 
-EXPOSE      8080
+EXPOSE 8080
 
-USER appuser:appuser
+USER 10001:10001
 
 ENTRYPOINT  [ "/gin-demo" ]
