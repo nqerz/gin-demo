@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gin-demo
+data:
+  config.yaml: |-
+    ---
+    Log:
+      # Levels(1:fatal 2:error,3:warn,4:info,5:debug,6:trace)
+      Level: 4
+      # Level format(support types：text/json)
+      Format: "json"
+      # Output(support types: stdout/stderr/file)
+      Output: "stdout"
+      OutputFile: "storage/app.log"

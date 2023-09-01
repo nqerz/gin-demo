@@ -11,3 +11,7 @@ vet: ## Run go vet against code.
 	go vet ./...
 
 pre-build: fmt vet ## test Build docker image with the manager.
+
+
+build.image:
+	docker build -t $(REPO_NAME):test .
