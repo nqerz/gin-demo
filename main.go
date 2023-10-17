@@ -65,6 +65,8 @@ func initLogger() (func(), error) {
 	logger.SetFormatter(c.Format)
 	logger.SetReportCaller(true)
 
+
+
 	var lumber *lumberjack.Logger
 	if c.Output != "" {
 		switch c.Output {
