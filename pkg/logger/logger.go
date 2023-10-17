@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"time"
 
 	"github.com/sirupsen/logrus"
+	"github.com/uptrace/opentelemetry-go-extra/otellogrus"
 )
 
 const (
@@ -28,17 +30,21 @@ type Entry = logrus.Entry
 // SetLevel logrus iota value
 func SetLevel(level int) {
 	logrus.SetLevel(logrus.Level(level))
+	logrus.AddHook(otellogrus.NewHook(otellogrus.WithLevels(
+		logrus.Level(level),
+	)))
 }
 
 // SetFormatter
 func SetFormatter(format string) {
 	switch format {
 	case "json":
-		logrus.SetFormatter(new(logrus.JSONFormatter))
+		logrus.SetFormatter(new(CustomJSONFormatter))
 	default:
 		logrus.SetFormatter(new(logrus.TextFormatter))
 	}
 }
+
 
 // SetReportCaller
 func SetReportCaller(include bool) {
@@ -54,6 +60,7 @@ func SetOutput(out io.Writer) {
 func SetVersion(v string) {
 	version = v
 }
+
 
 func GetWrite() *io.PipeWriter {
 	return logrus.StandardLogger().Writer()
@@ -191,3 +198,14 @@ var (
 	Panicf = logrus.Panicf
 	Printf = logrus.Printf
 )
+
+
+type CustomJSONFormatter struct {
+  logrus.JSONFormatter
+}
+
+func (f *CustomJSONFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+  timestamp := entry.Time.Format("2006-01-02 15:04:05")  
+  entry.Time, _ = time.Parse("2006-01-02 15:04:05", timestamp)
+  return f.JSONFormatter.Format(entry)
+}

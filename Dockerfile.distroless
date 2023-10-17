@@ -1,4 +1,4 @@
-FROM golang:1.21-bookworm As build-stage
+FROM golang:1.21-bookworm AS build-stage
 
 # ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE=on
@@ -32,3 +32,4 @@ EXPOSE      8080
 USER nonroot:nonroot
 
 ENTRYPOINT  [ "/gin-demo" ]
+CMD ["--config", "config.yaml"]

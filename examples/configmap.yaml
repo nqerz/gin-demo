@@ -11,5 +11,5 @@ data:
       # Level format(support types：text/json)
       Format: "json"
       # Output(support types: stdout/stderr/file)
-      Output: "stdout"
-      OutputFile: "storage/app.log"
+      Output: "file"
+      OutputFile: "/logs/app.log"

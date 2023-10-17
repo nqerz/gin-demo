@@ -41,7 +41,11 @@ spec:
             - name: config-volume
               mountPath: /configs/config.yaml
               subPath: config.yaml
+            - name: log-volume
+              mountPath: /logs
       volumes:
         - name: config-volume
           configMap:
             name: gin-demo
+        - name: log-volume
+          emptyDir: {}

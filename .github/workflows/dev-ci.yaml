@@ -62,6 +62,16 @@ jobs:
       #     docker push ${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-$GITHUB_SHA_SHORT
       #     docker push ${{ secrets.DOCKER_UERNAME }}/gin-demo:$GITHUB_BRANCH
 
+      # - name: Run Trivy vulnerability scanner
+      #   uses: aquasecurity/trivy-action@master
+      #   with:
+      #     image-ref: "${{ secrets.DOCKER_UERNAME }}/gin-demo:sha-$GITHUB_SHA_SHORT"
+      #     format: "table"
+      #     exit-code: "1"
+      #     ignore-unfixed: true
+      #     vuln-type: "os,library"
+      #     severity: "CRITICAL"
+
       # - name: Trigger CI
       #   if: success()
       #   uses: InformaticsMatters/trigger-ci-action@86a187932ffa16df10523eeb341cd216e349bc61

@@ -1,6 +1,6 @@
-FROM golang:1.21-bookworm As build-stage
+FROM golang:1.21-bookworm AS build-stage
 
-# ENV GOPROXY=https://goproxy.cn,direct
+ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE=on
 ENV CGO_ENABLED=0
 ENV GOOS=linux
